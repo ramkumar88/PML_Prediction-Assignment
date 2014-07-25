@@ -1,0 +1,240 @@
+install.packages("RMySQL")
+ucscDb <- dbConnect(MySQL(),user="genome",host="genome-mysql.cse.ucsc.edu")
+install.packages("dbConnect")
+ucscDb <- dbConnect(MySQL(),user="genome",host="genome-mysql.cse.ucsc.edu")
+dbConnect
+?pbeta
+x <- 1:4#
+p <- x/sum(x)#
+temp <- rbind(x, p)#
+rownames(temp) <- c("X", "Prob")
+histo?
+)
+?hist
+hist(temp)
+?plot
+plot(temp)
+pbinom(2, size = 5)
+pbinom(2, size = 5,prob=0.5)
+pbinom(4, size = 5,prob=0.5)
+pbinom(5, size = 5,prob=0.5)
+?ppois
+pbinom(c(4,5), size = 5,prob=0.5)
+6/32
+?pnorm
+dnorm(14,mean=15,sd=1)
+dnorm(16,mean=15,sd=1)
+dnorm(15,mean=15,sd=1)
+0.2419707*2
++0.3989423
+0.4839414 +0.3989423
+dnorm(seq(14,16),mean=15,sd=1)
+pnorm(seq(14,16),mean=15,sd=1)
+0.8413447 - 0.1586553
+1/12
+ppois(0,lambda=6)
+e^-6
+e
+exp?
+?
+)
+?exp
+exp(-6)
+ppois(0:10,lambda=15)
+sum(ppois(0:10,lambda=15))
+sum(ppois(0:5=4,lambda=6))
+sum(ppois(0:4,lambda=6))
+ppois(0:4,lambda=6)
+ppois(1),lambda=6)
+ppois(1,lambda=6)
+qpois(1,lambda=6)
+dpois(1,lambda=6)
+sum(dpois(0:4,lambda=6))
+sum(dpois(0:10,lambda=15))
+combn(1:9,3)
+0.8/1.1
+1/12
+1/24
+1/144
+1/12 * 1/12
+sqrt(1/12)
+10/11
+1/.15
+1/0.03
+n <- 9
+s <- 30
+round(sqrt((n - 1) * s^2/qchisq(c(0.975, 0.025), n - 1)), 3)
+1100 - 57
+1100 +  57
+sqrt((n - 1) * s^2/qchisq(c(0.975, 0.025), n - 1))
+qchisq(c(0.975, 0.025), n - 1))/sqrt(n - 1)
+sqrt(qchisq(c(0.975, 0.025), n - 1)/sqrt(n - 1))
+sqrt((n - 1) * s^2/qchisq(0.95, n - 1))
+setwd("~/Documents/Data Science/Practical Machine Learning/Week 3/Prediction Assignment")
+library(caret)#
+library(randomForest)
+dataDir <- "data"#
+trainingUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"#
+trainingCSV <- file.path(dataDir,"pml-training.csv")#
+testingUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"#
+testingCSV <- file.path(dataDir,"pml-testing.csv")#
+if (!file.exists(dataDir)){#
+    dir.create(file.path(dataDir))#
+}#
+## read csv if raw data is not defined#
+if (!file.exists(trainingCSV)){#
+    download.file(trainingUrl, destfile = trainingCSV, method="curl")#
+}#
+## read csv if raw data is not defined#
+if (!file.exists(testingCSV)){#
+    download.file(testingUrl, destfile = testingCSV, method="curl")#
+}#
+set.seed(13343)#
+## Load the data from csv#
+trainingData <- read.csv(trainingCSV)#
+testingData <- read.csv(testingCSV)
+## Remove all columns with NA#
+trainingData <- trainingData[,colSums(is.na(trainingData))==0]
+dim(trainingData)
+## Remove near zero variance data from training#
+trainingData <- trainingData[,-nearZeroVar(trainingData)]
+dim(trainingData)
+nearZeroVar(trainingData)
+nz <- nearZeroVar(trainingData)
+nz$freqRatio
+nz <- nearZeroVar(trainingData,saveMetrics = TRUE)
+summary(nz)
+nz$freqRatio
+nz$nzv
+nz$percentUnique
+length(nz$percentUnique)
+order(nz$percentUnique)
+class(nz$percentUnique)
+sort(nz$percentUnique,decreasing=TRUE)
+nz <- nearZeroVar(trainingData,saveMetrics = TRUE)
+nz
+## Remove near zero variance data from training#
+trainingData <- trainingData[,-nearZeroVar(trainingData)]
+# Parameters#
+formula <- as.formula("classe ~ .")#
+## convert factors to indicator#
+trainingData.dummyvars <- dummyVars(formula, data=trainingData)#
+trainingData.forest <- as.data.frame(predict(trainingData.dummyvars, newdata=trainingData))#
+trainingData.forest <- cbind(trainingData$classe,trainingData.forest)#
+colnames(trainingData.forest)[1] <- "classe"#
+## Split training to training and validation#
+inTrain <- createDataPartition(y=trainingData.forest$classe,p=0.70,list=FALSE)#
+validationData <- trainingData.forest[-inTrain,]#
+subTrainingData <- trainingData.forest[inTrain,]
+library(caret)#
+library(randomForest)
+dataDir <- "data"#
+trainingUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"#
+trainingCSV <- file.path(dataDir,"pml-training.csv")#
+testingUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"#
+testingCSV <- file.path(dataDir,"pml-testing.csv")#
+if (!file.exists(dataDir)){#
+    dir.create(file.path(dataDir))#
+}#
+## read csv if raw data is not defined#
+if (!file.exists(trainingCSV)){#
+    download.file(trainingUrl, destfile = trainingCSV, method="curl")#
+}#
+## read csv if raw data is not defined#
+if (!file.exists(testingCSV)){#
+    download.file(testingUrl, destfile = testingCSV, method="curl")#
+}#
+set.seed(13343)#
+## Load the data from csv#
+trainingData <- read.csv(trainingCSV)#
+testingData <- read.csv(testingCSV)#
+#
+## Remove all columns with NA#
+trainingData <- trainingData[,colSums(is.na(trainingData))==0]#
+## Remove near zero variance data from training#
+trainingData <- trainingData[,-nearZeroVar(trainingData)]#
+# Parameters#
+formula <- as.formula("classe ~ .")#
+## convert factors to indicator#
+trainingData.dummyvars <- dummyVars(formula, data=trainingData)#
+trainingData.forest <- as.data.frame(predict(trainingData.dummyvars, newdata=trainingData))#
+trainingData.forest <- cbind(trainingData$classe,trainingData.forest)#
+colnames(trainingData.forest)[1] <- "classe"#
+## Split training to training and validation#
+inTrain <- createDataPartition(y=trainingData.forest$classe,p=0.70,list=FALSE)#
+validationData <- trainingData.forest[-inTrain,]#
+subTrainingData <- trainingData.forest[inTrain,]
+length(names(subTrainingData))
+M <-  abs(cor(subTraining[,-1]))
+M <-  abs(cor(subTrainingData[,-1]))
+diag(M) <- 0
+which(M > 0.8,arr.ind=T)
+which(M > 0.9,arr.ind=T)
+highCor <- which(M > 0.9,arr.ind=T)
+length(highCor)
+highCor <- which(M > 0.8,arr.ind=T)
+length(highCor)
+nz <- nearZeroVar(subTrainingData,saveMetrics = TRUE)
+nz
+## Remove near zero variance data from training#
+subTrainingData <- subTrainingData[,-nearZeroVar(subTrainingData)]
+dim(subTrainingData)
+dim(validationData)
+M <-  abs(cor(subTrainingData[,-1]))
+names(subTrainingData)
+M <-  abs(cor(subTrainingData[,-1]))
+diag(M) <- 0
+highCor <- which(M > 0.8,arr.ind=T)
+highCor
+highCor <- which(M > 0.9,arr.ind=T)
+highCor
+names(highCor)
+summary(highCor)
+as.data.fram(highCor)
+hdf <- as.data.frame(highCor)
+names(hdf)
+hdf
+hdf$row
+highCor[1]
+highCor[1,]
+highCor[,1]
+class(highCor[,1])
+names(highCor[,1])
+unique(names(highCor[,1]))
+paste(unique(names(highCor[,1])),collapse="+")
+paste(unique(names(highCor[,1])),collapse=" + ")
+varform <- paste(unique(names(highCor[,1])),collapse=" + ")
+varform
+paste("classe ~ ",varform)
+formula <- paste("classe ~ ",varform)
+class(formula)
+formula == "classe ~  pitch_belt + accel_belt_x + magnet_dumbbell_x + magnet_dumbbell_y + total_accel_belt + accel_belt_y + accel_belt_z + user_name.adelmo + roll_belt + gyros_arm_y + gyros_arm_x + gyros_dumbbell_z + gyros_forearm_z + gyros_dumbbell_x + user_name.pedro"
+#fit the model#
+modelFit <- train(formula,method="rf",data=subTrainingData,trControl=trainControl(method = 'cv'))
+?train
+formula
+#fit the model#
+modelFit <- train(classe ~  pitch_belt + accel_belt_x + magnet_dumbbell_x + magnet_dumbbell_y + total_accel_belt + accel_belt_y + accel_belt_z + user_name.adelmo + roll_belt + gyros_arm_y + gyros_arm_x + gyros_dumbbell_z + gyros_forearm_z + gyros_dumbbell_x + user_name.pedro,method="rf",data=subTrainingData,trControl=trainControl(method = 'cv'))
+modelFit
+pred <- predict(modelFit,validationData)
+length(pred)
+table(pred,validationData$classe)
+highestCorVariables <- which(variableCorrelations > 0.95,arr.ind=T)#
+## Get the unique list of variables with highest correlations#
+topCorVariables <- paste(unique(names(highestCorVariables[,1])),collapse = " + ")#
+## Build the formula for training#
+variableFormula <- paste("classe ~ ",topCorVariables)#
+variableFormula
+## Get the most correlated variables#
+variableCorrelations <-  abs(cor(subTrainingData[,-1]))#
+## Clear out the diagnoal#
+diag(variableCorrelations) <- 0#
+## Get the most correlations#
+highestCorVariables <- which(variableCorrelations > 0.95,arr.ind=T)#
+## Get the unique list of variables with highest correlations#
+topCorVariables <- paste(unique(names(highestCorVariables[,1])),collapse = " + ")#
+## Build the formula for training#
+variableFormula <- paste("classe ~ ",topCorVariables)#
+variableFormula
+#fit the model#
+model2Fit <- train(classe ~  total_accel_belt + accel_belt_z + accel_belt_x + roll_belt + pitch_belt + gyros_dumbbell_z + gyros_dumbbell_x + gyros_forearm_z,method="rf",data= subTrainingData,trControl=trainControl(method = 'cv'))
