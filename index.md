@@ -1,11 +1,7 @@
 Predicting exercise activity
 ========================================================
 ##### Author: Ramkumar Bommireddipalli
-<<<<<<< HEAD
 ##### Published: July 26, 2014
-=======
-##### Published: July 25, 2014
->>>>>>> Finished assignment
 
 
 Synopsis
@@ -63,11 +59,7 @@ testingData <- read.csv(testingCSV)
 ```
 
 
-<<<<<<< HEAD
 To better validate the trained modal, the training data was split further with 70% for subTraining and 30 % for validation data sets.
-=======
-To better validate the trained modal, the training data was split further into a sub-training and validation data set.
->>>>>>> Finished assignment
 
 ```r
 # set seed
@@ -137,11 +129,7 @@ highestCorVarNames<- which(variableCorrelations > 0.80,arr.ind=T)
 highestCorVarNames <- unique(names(highestCorVarNames[,1]))
 ```
 
-<<<<<<< HEAD
 After selecting the highly co-variate features, there are 28 variables. This is a total reduction of 82.39% from the original set of variables. The best training variables are then extracted from the sub training data set to train the prediction model.
-=======
-After selecting the highly co-variate features, there are 28 variables. This is a total reduction of 82.39% from the original set of variables. These training variables are then extracted from the sub training data set to train the prediction model.
->>>>>>> Finished assignment
 
 ```r
 ## Subset the specific variables from training
@@ -149,15 +137,9 @@ bestTrainingVariables <- subTrainingData[ , which(names(subTrainingData) %in% hi
 ```
 
 
-<<<<<<< HEAD
 Training the model with cross validation
 ========================================================
 The best training variables are then to used to train a random forest model with cross validation. The resulting model has close to 100% accuracy as shown in the details below.
-=======
-Training the model
-========================================================
-The best training variables are then to used to train a random forest model. The resulting model has close to 100% accuracy as shown in the details below.
->>>>>>> Finished assignment
 
 ```r
 #fit the model
@@ -190,10 +172,7 @@ modelFit
 ## The final value used for the model was mtry = 2.
 ```
 
-<<<<<<< HEAD
 
-=======
->>>>>>> Finished assignment
 Validating the Model
 ========================================================
 The next step is to predict the validation data and verify the accuracy of the model. Since the validation data also has some factor columns, there is some cleanup performed on the validation data.
@@ -215,17 +194,11 @@ validationData <- validationData.forest
 validationPred <- predict(modelFit,validationData)
 ```
 
-<<<<<<< HEAD
 The following table and plot show the quality of predictions on the validation data set. The high prediction values along the table diagonal as well has high percentage of true and very low false predictions on the plot indicate that our model is highly accurate.
 
 ```r
 ## get the list of correct predictions
 validationData$rightPred <- (validationPred == validationData$classe)
-=======
-The following table shows the quality of predictions on the validation data set, the high values along the diagonal indicate that our model is highly accurate.
-
-```r
->>>>>>> Finished assignment
 ## Show accuracy on validation data set
 table(validationPred,validationData$classe)
 ```
@@ -240,7 +213,6 @@ table(validationPred,validationData$classe)
 ##              E    0    0    0    0 1075
 ```
 
-<<<<<<< HEAD
 ```r
 ## plot the accuracy of predictions along the top two predictors
 qplot(pitch_belt,yaw_belt,colour=rightPred,data=validationData,main="validation data predictions")
@@ -258,8 +230,6 @@ outSampleErr <- round((length(which(!validationData$rightPred))/length(validatio
 ```
 The out of sample error rate with validation data set was 1.41%.
 
-=======
->>>>>>> Finished assignment
 
 Testing the Model
 ========================================================

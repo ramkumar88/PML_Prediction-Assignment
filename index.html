@@ -183,11 +183,7 @@ hljs.initHighlightingOnLoad();
 
 <h5>Author: Ramkumar Bommireddipalli</h5>
 
-<<<<<<< HEAD
 <h5>Published: July 26, 2014</h5>
-=======
-<h5>Published: July 25, 2014</h5>
->>>>>>> Finished assignment
 
 <h1>Synopsis</h1>
 
@@ -238,11 +234,7 @@ trainingData &lt;- read.csv(trainingCSV)
 testingData &lt;- read.csv(testingCSV)
 </code></pre>
 
-<<<<<<< HEAD
 <p>To better validate the trained modal, the training data was split further with 70% for subTraining and 30 % for validation data sets.</p>
-=======
-<p>To better validate the trained modal, the training data was split further into a sub-training and validation data set.</p>
->>>>>>> Finished assignment
 
 <pre><code class="r"># set seed
 set.seed(13343)
@@ -305,25 +297,15 @@ highestCorVarNames&lt;- which(variableCorrelations &gt; 0.80,arr.ind=T)
 highestCorVarNames &lt;- unique(names(highestCorVarNames[,1]))
 </code></pre>
 
-<<<<<<< HEAD
 <p>After selecting the highly co-variate features, there are 28 variables. This is a total reduction of 82.39% from the original set of variables. The best training variables are then extracted from the sub training data set to train the prediction model.</p>
-=======
-<p>After selecting the highly co-variate features, there are 28 variables. This is a total reduction of 82.39% from the original set of variables. These training variables are then extracted from the sub training data set to train the prediction model.</p>
->>>>>>> Finished assignment
 
 <pre><code class="r">## Subset the specific variables from training
 bestTrainingVariables &lt;- subTrainingData[ , which(names(subTrainingData) %in% highestCorVarNames)]
 </code></pre>
 
-<<<<<<< HEAD
 <h1>Training the model with cross validation</h1>
 
 <p>The best training variables are then to used to train a random forest model with cross validation. The resulting model has close to 100% accuracy as shown in the details below.</p>
-=======
-<h1>Training the model</h1>
-
-<p>The best training variables are then to used to train a random forest model. The resulting model has close to 100% accuracy as shown in the details below.</p>
->>>>>>> Finished assignment
 
 <pre><code class="r">#fit the model
 modelFit &lt;- train(subTrainingData$classe~ .,method=&quot;rf&quot;,data=bestTrainingVariables,trControl=trainControl(method = &#39;cv&#39;))
@@ -374,17 +356,11 @@ validationData &lt;- validationData.forest
 validationPred &lt;- predict(modelFit,validationData)
 </code></pre>
 
-<<<<<<< HEAD
 <p>The following table and plot show the quality of predictions on the validation data set. The high prediction values along the table diagonal as well has high percentage of true and very low false predictions on the plot indicate that our model is highly accurate.</p>
 
 <pre><code class="r">## get the list of correct predictions
 validationData$rightPred &lt;- (validationPred == validationData$classe)
 ## Show accuracy on validation data set
-=======
-<p>The following table shows the quality of predictions on the validation data set, the high values along the diagonal indicate that our model is highly accurate.</p>
-
-<pre><code class="r">## Show accuracy on validation data set
->>>>>>> Finished assignment
 table(validationPred,validationData$classe)
 </code></pre>
 
@@ -397,7 +373,6 @@ table(validationPred,validationData$classe)
 ##              E    0    0    0    0 1075
 </code></pre>
 
-<<<<<<< HEAD
 <pre><code class="r">## plot the accuracy of predictions along the top two predictors
 qplot(pitch_belt,yaw_belt,colour=rightPred,data=validationData,main=&quot;validation data predictions&quot;)
 </code></pre>
@@ -414,8 +389,6 @@ outSampleErr &lt;- round((length(which(!validationData$rightPred))/length(valida
 
 <p>The out of sample error rate with validation data set was 1.41%.</p>
 
-=======
->>>>>>> Finished assignment
 <h1>Testing the Model</h1>
 
 <p>The final step is to predict the testing data using the model trained from before. Since the testing data also has some factor columns, there is some cleanup performed on the testing data.</p>
