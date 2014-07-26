@@ -94,147 +94,165 @@ set.seed(13343)#
 trainingData <- read.csv(trainingCSV)#
 testingData <- read.csv(testingCSV)
 ## Remove all columns with NA#
-trainingData <- trainingData[,colSums(is.na(trainingData))==0]
-dim(trainingData)
-## Remove near zero variance data from training#
-trainingData <- trainingData[,-nearZeroVar(trainingData)]
-dim(trainingData)
-nearZeroVar(trainingData)
-nz <- nearZeroVar(trainingData)
-nz$freqRatio
-nz <- nearZeroVar(trainingData,saveMetrics = TRUE)
-summary(nz)
-nz$freqRatio
-nz$nzv
-nz$percentUnique
-length(nz$percentUnique)
-order(nz$percentUnique)
-class(nz$percentUnique)
-sort(nz$percentUnique,decreasing=TRUE)
-nz <- nearZeroVar(trainingData,saveMetrics = TRUE)
-nz
-## Remove near zero variance data from training#
-trainingData <- trainingData[,-nearZeroVar(trainingData)]
-# Parameters#
-formula <- as.formula("classe ~ .")#
-## convert factors to indicator#
-trainingData.dummyvars <- dummyVars(formula, data=trainingData)#
-trainingData.forest <- as.data.frame(predict(trainingData.dummyvars, newdata=trainingData))#
-trainingData.forest <- cbind(trainingData$classe,trainingData.forest)#
-colnames(trainingData.forest)[1] <- "classe"#
-## Split training to training and validation#
-inTrain <- createDataPartition(y=trainingData.forest$classe,p=0.70,list=FALSE)#
-validationData <- trainingData.forest[-inTrain,]#
-subTrainingData <- trainingData.forest[inTrain,]
-library(caret)#
-library(randomForest)
-dataDir <- "data"#
-trainingUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"#
-trainingCSV <- file.path(dataDir,"pml-training.csv")#
-testingUrl <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"#
-testingCSV <- file.path(dataDir,"pml-testing.csv")#
-if (!file.exists(dataDir)){#
-    dir.create(file.path(dataDir))#
-}#
-## read csv if raw data is not defined#
-if (!file.exists(trainingCSV)){#
-    download.file(trainingUrl, destfile = trainingCSV, method="curl")#
-}#
-## read csv if raw data is not defined#
-if (!file.exists(testingCSV)){#
-    download.file(testingUrl, destfile = testingCSV, method="curl")#
-}#
-set.seed(13343)#
-## Load the data from csv#
-trainingData <- read.csv(trainingCSV)#
-testingData <- read.csv(testingCSV)#
-#
-## Remove all columns with NA#
 trainingData <- trainingData[,colSums(is.na(trainingData))==0]#
 ## Remove near zero variance data from training#
 trainingData <- trainingData[,-nearZeroVar(trainingData)]#
-# Parameters#
-formula <- as.formula("classe ~ .")#
-## convert factors to indicator#
-trainingData.dummyvars <- dummyVars(formula, data=trainingData)#
+#
+## convert factors to indicator variables on training#
+trainingData.dummyvars <- dummyVars(classe ~ ., data=trainingData)#
 trainingData.forest <- as.data.frame(predict(trainingData.dummyvars, newdata=trainingData))#
 trainingData.forest <- cbind(trainingData$classe,trainingData.forest)#
 colnames(trainingData.forest)[1] <- "classe"#
+#
+## Remove near zero variance data from the new indicator variables#
+trainingData <- trainingData[,-nearZeroVar(trainingData)]#
+#
 ## Split training to training and validation#
 inTrain <- createDataPartition(y=trainingData.forest$classe,p=0.70,list=FALSE)#
 validationData <- trainingData.forest[-inTrain,]#
-subTrainingData <- trainingData.forest[inTrain,]
-length(names(subTrainingData))
-M <-  abs(cor(subTraining[,-1]))
-M <-  abs(cor(subTrainingData[,-1]))
-diag(M) <- 0
-which(M > 0.8,arr.ind=T)
-which(M > 0.9,arr.ind=T)
-highCor <- which(M > 0.9,arr.ind=T)
-length(highCor)
-highCor <- which(M > 0.8,arr.ind=T)
-length(highCor)
-nz <- nearZeroVar(subTrainingData,saveMetrics = TRUE)
-nz
-## Remove near zero variance data from training#
-subTrainingData <- subTrainingData[,-nearZeroVar(subTrainingData)]
-dim(subTrainingData)
-dim(validationData)
-M <-  abs(cor(subTrainingData[,-1]))
-names(subTrainingData)
-M <-  abs(cor(subTrainingData[,-1]))
-diag(M) <- 0
-highCor <- which(M > 0.8,arr.ind=T)
-highCor
-highCor <- which(M > 0.9,arr.ind=T)
-highCor
-names(highCor)
-summary(highCor)
-as.data.fram(highCor)
-hdf <- as.data.frame(highCor)
-names(hdf)
-hdf
-hdf$row
-highCor[1]
-highCor[1,]
-highCor[,1]
-class(highCor[,1])
-names(highCor[,1])
-unique(names(highCor[,1]))
-paste(unique(names(highCor[,1])),collapse="+")
-paste(unique(names(highCor[,1])),collapse=" + ")
-varform <- paste(unique(names(highCor[,1])),collapse=" + ")
-varform
-paste("classe ~ ",varform)
-formula <- paste("classe ~ ",varform)
-class(formula)
-formula == "classe ~  pitch_belt + accel_belt_x + magnet_dumbbell_x + magnet_dumbbell_y + total_accel_belt + accel_belt_y + accel_belt_z + user_name.adelmo + roll_belt + gyros_arm_y + gyros_arm_x + gyros_dumbbell_z + gyros_forearm_z + gyros_dumbbell_x + user_name.pedro"
-#fit the model#
-modelFit <- train(formula,method="rf",data=subTrainingData,trControl=trainControl(method = 'cv'))
-?train
-formula
-#fit the model#
-modelFit <- train(classe ~  pitch_belt + accel_belt_x + magnet_dumbbell_x + magnet_dumbbell_y + total_accel_belt + accel_belt_y + accel_belt_z + user_name.adelmo + roll_belt + gyros_arm_y + gyros_arm_x + gyros_dumbbell_z + gyros_forearm_z + gyros_dumbbell_x + user_name.pedro,method="rf",data=subTrainingData,trControl=trainControl(method = 'cv'))
-modelFit
-pred <- predict(modelFit,validationData)
-length(pred)
-table(pred,validationData$classe)
-highestCorVariables <- which(variableCorrelations > 0.95,arr.ind=T)#
-## Get the unique list of variables with highest correlations#
-topCorVariables <- paste(unique(names(highestCorVariables[,1])),collapse = " + ")#
-## Build the formula for training#
-variableFormula <- paste("classe ~ ",topCorVariables)#
-variableFormula
+subTrainingData <- trainingData.forest[inTrain,]#
+#
 ## Get the most correlated variables#
 variableCorrelations <-  abs(cor(subTrainingData[,-1]))#
 ## Clear out the diagnoal#
 diag(variableCorrelations) <- 0#
 ## Get the most correlations#
-highestCorVariables <- which(variableCorrelations > 0.95,arr.ind=T)#
-## Get the unique list of variables with highest correlations#
-topCorVariables <- paste(unique(names(highestCorVariables[,1])),collapse = " + ")#
+highestCorVarNames<- which(variableCorrelations > 0.90,arr.ind=T)#
+## Get the unique list of variables#
+highestCorVarNames <- unique(names(highestCorVariables[,1]))#
 ## Build the formula for training#
-variableFormula <- paste("classe ~ ",topCorVariables)#
+variableFormula <- paste("classe ~ ",paste(highestCorVariables,collapse = " + "))
+## Get the most correlations#
+highestCorVarNames<- which(variableCorrelations > 0.90,arr.ind=T)#
+## Get the unique list of variables#
+highestCorVarNames <- unique(names(highestCorVarNames[,1]))#
+## Build the formula for training#
+variableFormula <- paste("classe ~ ",paste(highestCorVarNames,collapse = " + "))
 variableFormula
+highestCorVarNames
+## Subset the specific variables from training#
+bestTrainingVariables <- subTrainingData[ , -which(names(subTrainingData) %in% highestCorVarNames)]
+dim(bestTrainingVariables)
+## Subset the specific variables from training#
+bestTrainingVariables <- subTrainingData[ , which(names(subTrainingData) %in% highestCorVarNames)]
+dim(bestTrainingVariables)
 #fit the model#
-model2Fit <- train(classe ~  total_accel_belt + accel_belt_z + accel_belt_x + roll_belt + pitch_belt + gyros_dumbbell_z + gyros_dumbbell_x + gyros_forearm_z,method="rf",data= subTrainingData,trControl=trainControl(method = 'cv'))
+modelFit <- train(subTrainingData$classe~ .,method="rf",data=bestTrainingVariables,trControl=trainControl(method = 'cv'))
+modelFit
+## check for accuracy on validation data#
+pred <- predict(modelFit,validationData)
+table(pred,validationData$classe)
+## Get the most correlated variables#
+variableCorrelations <-  abs(cor(subTrainingData[,-1]))#
+## Clear out the diagnoal#
+diag(variableCorrelations) <- 0#
+## Get the most correlations > 0.95#
+highestCorVarNames<- which(variableCorrelations > 0.95,arr.ind=T)#
+## Get the unique list of variables#
+highestCorVarNames <- unique(names(highestCorVarNames[,1]))#
+## Build the formula for training#
+variableFormula <- paste("classe ~ ",paste(highestCorVarNames,collapse = " + "))#
+## Subset the specific variables from training#
+bestTrainingVariables <- subTrainingData[ , which(names(subTrainingData) %in% highestCorVarNames)]
+dim(bestTrainingVariables)
+#fit the model#
+modelFit2 <- train(subTrainingData$classe~ .,method="rf",data=bestTrainingVariables,trControl=trainControl(method = 'cv'))
+modelFit2
+## check for accuracy on validation data#
+pred2 <- predict(modelFit2,validationData)
+table(pred2,validationData$classe)
+## Get the most correlated variables#
+variableCorrelations <-  abs(cor(subTrainingData[,-1]))#
+## Clear out the diagnoal#
+diag(variableCorrelations) <- 0#
+## Get the variables with high correlations > 0.85#
+highestCorVarNames<- which(variableCorrelations > 0.85,arr.ind=T)#
+## Get the unique list of variables#
+highestCorVarNames <- unique(names(highestCorVarNames[,1]))#
+## Build the formula for training#
+variableFormula <- paste("classe ~ ",paste(highestCorVarNames,collapse = " + "))#
+## Subset the specific variables from training#
+bestTrainingVariables <- subTrainingData[ , which(names(subTrainingData) %in% highestCorVarNames)]
+dim(bestTrainingVariables)
+#fit the model#
+modelFit3 <- train(subTrainingData$classe~ .,method="rf",data=bestTrainingVariables,trControl=trainControl(method = 'cv'))
+modelFit3
+## check for accuracy on validation data#
+pred3 <- predict(modelFit3,validationData)
+table(pred3,validationData$classe)
+## Get the most correlated variables#
+variableCorrelations <-  abs(cor(subTrainingData[,-1]))#
+## Clear out the diagnoal#
+diag(variableCorrelations) <- 0#
+## Get the variables with high correlations > 0.85#
+highestCorVarNames<- which(variableCorrelations > 0.80,arr.ind=T)#
+## Get the unique list of variables#
+highestCorVarNames <- unique(names(highestCorVarNames[,1]))#
+## Build the formula for training#
+variableFormula <- paste("classe ~ ",paste(highestCorVarNames,collapse = " + "))#
+## Subset the specific variables from training#
+bestTrainingVariables <- subTrainingData[ , which(names(subTrainingData) %in% highestCorVarNames)]
+## Get the most correlated variables#
+variableCorrelations <-  abs(cor(subTrainingData[,-1]))#
+## Clear out the diagnoal#
+diag(variableCorrelations) <- 0#
+## Get the variables with high correlations > 0.80#
+highestCorVarNames<- which(variableCorrelations > 0.80,arr.ind=T)#
+## Get the unique list of variables#
+highestCorVarNames <- unique(names(highestCorVarNames[,1]))#
+## Build the formula for training#
+variableFormula <- paste("classe ~ ",paste(highestCorVarNames,collapse = " + "))#
+## Subset the specific variables from training#
+bestTrainingVariables <- subTrainingData[ , which(names(subTrainingData) %in% highestCorVarNames)]
+#fit the model#
+modelFit4 <- train(subTrainingData$classe~ .,method="rf",data=bestTrainingVariables,trControl=trainControl(method = 'cv'))
+modelFit4
+## check for accuracy on validation data#
+pred4 <- predict(modelFit4,validationData)
+table(pred4,validationData$classe)
+dim(subTrainingData)
+unique(lapply(names(subTrainingData), class))
+unique(lapply(subTrainingData, class))
+as.vector(unique(lapply(subTrainingData, class)))
+dim(testingData)
+modelfit4
+modelFit4
+tpred <- predict(modelFit4,testingData)
+## convert factors to indicator variables on training#
+testingData.dummyvars <- dummyVars(classe ~ ., data=testingData)#
+testingData.forest <- as.data.frame(predict(testingData.dummyvars, newdata=testingData))#
+testingData.forest <- cbind(testingData$classe,testingData.forest)#
+colnames(testingData.forest)[1] <- "classe"#
+testingData <- testingData.forest
+## convert factors to indicator variables on training#
+testingData.dummyvars <- dummyVars( ~ ., data=testingData)#
+testingData.forest <- as.data.frame(predict(testingData.dummyvars, newdata=testingData))#
+testingData.forest <- cbind(testingData$classe,testingData.forest)#
+colnames(testingData.forest)[1] <- "classe"#
+testingData <- testingData.forest
+## convert factors to indicator variables on training#
+testingData.dummyvars <- dummyVars( ~ ., data=testingData)#
+testingData.forest <- as.data.frame(predict(testingData.dummyvars, newdata=testingData))#
+testingData <- testingData.forest
+testingData.forest <- as.data.frame(predict(testingData.dummyvars, newdata=testingData))
+t <- predict(testingData.dummyvars, newdata=testingData)
+## Remove all columns with NA#
+testingData <- testingData[,colSums(is.na(testingData))==0]#
+## Remove near zero variance data from training#
+testingData <- testingData[,-nearZeroVar(testingData)]
+## convert factors to indicator variables on training#
+testingData.dummyvars <- dummyVars( ~ ., data=testingData)#
+testingData.forest <- as.data.frame(predict(testingData.dummyvars, newdata=testingData))#
+testingData <- testingData.forest
+tpred <- predict(modelFit4,testingData)
+tpred
+length(tpred)
+pml_write_files = function(x){#
+  n = length(x)#
+  for(i in 1:n){#
+    filename = paste0("problem_id_",i,".txt")#
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)#
+  }#
+}
+pm_write_files(tpred)
+pml_write_files(tpred)
