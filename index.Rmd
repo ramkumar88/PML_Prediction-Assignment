@@ -44,7 +44,7 @@ testingData <- read.csv(testingCSV)
 ```
 
 
-To better validate the trained modal, the training data was split further into a sub-training and validation data set.
+To better validate the trained modal, the training data was split further with 70% for subTraining and 30 % for validation data sets.
 ```{r setup_training}
 # set seed
 set.seed(13343)
@@ -100,16 +100,16 @@ highestCorVarNames<- which(variableCorrelations > 0.80,arr.ind=T)
 highestCorVarNames <- unique(names(highestCorVarNames[,1]))
 ```
 
-After selecting the highly co-variate features, there are `r highCorVarLen <- length(highestCorVarNames)-1;highCorVarLen` variables. This is a total reduction of `r round((1 - (highCorVarLen/orig_var_count))*100,2)`% from the original set of variables. These training variables are then extracted from the sub training data set to train the prediction model.
+After selecting the highly co-variate features, there are `r highCorVarLen <- length(highestCorVarNames)-1;highCorVarLen` variables. This is a total reduction of `r round((1 - (highCorVarLen/orig_var_count))*100,2)`% from the original set of variables. The best training variables are then extracted from the sub training data set to train the prediction model.
 ```{r feature_selection_subset}
 ## Subset the specific variables from training
 bestTrainingVariables <- subTrainingData[ , which(names(subTrainingData) %in% highestCorVarNames)]
 ```
 
 
-Training the model
+Training the model with cross validation
 ========================================================
-The best training variables are then to used to train a random forest model. The resulting model has close to 100% accuracy as shown in the details below.
+The best training variables are then to used to train a random forest model with cross validation. The resulting model has close to 100% accuracy as shown in the details below.
 ```{r training_model,cache=TRUE}
 #fit the model
 modelFit <- train(subTrainingData$classe~ .,method="rf",data=bestTrainingVariables,trControl=trainControl(method = 'cv'))
@@ -117,6 +117,7 @@ modelFit <- train(subTrainingData$classe~ .,method="rf",data=bestTrainingVariabl
 ## see model details
 modelFit
 ```
+
 
 Validating the Model
 ========================================================
@@ -139,11 +140,24 @@ validationPred <- predict(modelFit,validationData)
 
 ```
 
-The following table shows the quality of predictions on the validation data set, the high values along the diagonal indicate that our model is highly accurate.
+The following table and plot show the quality of predictions on the validation data set. The high prediction values along the table diagonal as well has high percentage of true and very low false predictions on the plot indicate that our model is highly accurate.
 ```{r validate_model_predictions}
+## get the list of correct predictions
+validationData$rightPred <- (validationPred == validationData$classe)
 ## Show accuracy on validation data set
 table(validationPred,validationData$classe)
+## plot the accuracy of predictions along the top two predictors
+qplot(pitch_belt,yaw_belt,colour=rightPred,data=validationData,main="validation data predictions")
 ```
+
+Out of sample error rate
+========================================================
+Since the subTraining data set was used for training, the validation data set is considered as out of sample. The out of sample error rate is calculated by looking at the validation predictions as shown below.
+```{r out_of_sample_error}
+## calculate out of sample error rate
+outSampleErr <- round((length(which(!validationData$rightPred))/length(validationData$rightPred))*100,digits=2)
+```
+The out of sample error rate with validation data set was `r outSampleErr`%.
 
 
 Testing the Model
